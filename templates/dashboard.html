@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block breadcrumb %}Inicio / Panel principal{% endblock %}
+
+{% block content %}
+
+<!-- Tarjetas de estadísticas -->
+<div class="stats-grid">
+    <div class="stat-card blue">
+        <div class="stat-label">Pacientes</div>
+        <div class="stat-value">{{ stats.pacientes }}</div>
+        <div class="stat-sub">registrados en el sistema</div>
+    </div>
+    <div class="stat-card green">
+        <div class="stat-label">Cuidadores</div>
+        <div class="stat-value">{{ stats.cuidadores }}</div>
+        <div class="stat-sub">asignados actualmente</div>
+    </div>
+    <div class="stat-card amber">
+        <div class="stat-label">Dispositivos</div>
+        <div class="stat-value">{{ stats.dispositivos }}</div>
+        <div class="stat-sub">GPS y Beacons en inventario</div>
+    </div>
+    <div class="stat-card red">
+        <div class="stat-label">Alertas activas</div>
+        <div class="stat-value">{{ stats.alertas_activas }}</div>
+        <div class="stat-sub">pendientes de atención</div>
+    </div>
+</div>
+
+<!-- Alertas recientes -->
+<div class="section-header">
+    <div>
+        <div class="section-title">Alertas recientes</div>
+        <div class="section-sub">Últimos 5 eventos registrados por el sistema</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Paciente</th>
+                    <th>Tipo de alerta</th>
+                    <th>Fecha y hora</th>
+                    <th>Estatus</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if alertas %}
+                    {% for a in alertas %}
+                    <tr>
+                        <td>{{ a.paciente }}</td>
+                        <td>{{ a.tipo_alerta }}</td>
+                        <td>{{ a.fecha_hora_lectura.strftime('%d %b %Y  %H:%M') }}</td>
+                        <td>
+                            {% if a.estatus_alerta == 'Activa' %}
+                                <span class="badge badge-alert">Activa</span>
+                            {% else %}
+                                <span class="badge badge-atendida">Atendida</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="4" style="text-align:center; color:#8892a4; padding:28px;">
+                            No hay alertas registradas.
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

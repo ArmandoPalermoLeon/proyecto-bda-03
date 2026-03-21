@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Editar' if cuidador else 'Nuevo' }} cuidador{% endblock %}
+{% block page_title %}{{ 'Editar' if cuidador else 'Nuevo' }} cuidador{% endblock %}
+{% block breadcrumb %}
+    Inicio /
+    <a href="{{ url_for('cuidadores_lista') }}" style="color:#185fa5;">Cuidadores</a> /
+    {{ 'Editar' if cuidador else 'Nuevo' }}
+{% endblock %}
+
+{% block content %}
+
+<div style="max-width: 680px;">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">
+                {% if cuidador %}
+                    Editando: {{ cuidador.nombre_cuidador }} {{ cuidador.apellido_p_cuid }}
+                {% else %}
+                    Registrar nuevo cuidador
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card-body">
+            <form method="POST"
+                  action="{{ url_for('cuidadores_editar', id=cuidador.id_cuidador) if cuidador else url_for('cuidadores_nuevo') }}">
+
+                <!-- ID del cuidador (solo en creación) -->
+                {% if not cuidador %}
+                <div class="form-group">
+                    <label class="form-label" for="id_cuidador">ID del cuidador</label>
+                    <input type="number"
+                           id="id_cuidador"
+                           name="id_cuidador"
+                           class="form-control"
+                           placeholder="Ej. 4"
+                           required>
+                </div>
+                {% endif %}
+
+                <!-- Nombre y apellidos -->
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="nombre_cuidador">Nombre(s)</label>
+                        <input type="text"
+                               id="nombre_cuidador"
+                               name="nombre_cuidador"
+                               class="form-control"
+                               placeholder="Ej. Juan"
+                               value="{{ cuidador.nombre_cuidador if cuidador else '' }}"
+                               required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="apellido_p_cuid">Apellido paterno</label>
+                        <input type="text"
+                               id="apellido_p_cuid"
+                               name="apellido_p_cuid"
+                               class="form-control"
+                               placeholder="Ej. Martínez"
+                               value="{{ cuidador.apellido_p_cuid if cuidador else '' }}"
+                               required>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="apellido_m_cuid">Apellido materno</label>
+                        <input type="text"
+                               id="apellido_m_cuid"
+                               name="apellido_m_cuid"
+                               class="form-control"
+                               placeholder="Ej. Ruiz"
+                               value="{{ cuidador.apellido_m_cuid if cuidador else '' }}"
+                               required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="telefono_cuid">Teléfono de contacto</label>
+                        <input type="text"
+                               id="telefono_cuid"
+                               name="telefono_cuid"
+                               class="form-control"
+                               placeholder="Ej. 555-1234"
+                               value="{{ cuidador.telefono_cuid if cuidador else '' }}"
+                               required>
+                    </div>
+                </div>
+
+                <!-- Acciones -->
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        {{ 'Guardar cambios' if cuidador else 'Registrar cuidador' }}
+                    </button>
+                    <a href="{{ url_for('cuidadores_lista') }}" class="btn btn-secondary">
+                        Cancelar
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

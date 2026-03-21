@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión — AlzMonitor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-wrapper {
+            display: flex;
+            width: 860px;
+            min-height: 480px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 40px rgba(15, 41, 68, 0.14);
+        }
+
+        /* Panel izquierdo decorativo */
+        .login-panel {
+            width: 340px;
+            background: #0f2944;
+            padding: 48px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        .panel-brand {
+            font-size: 12px;
+            font-weight: 700;
+            color: #7eb8f7;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: #2ecc71;
+            border-radius: 50%;
+            animation: pulse 2.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.3; }
+        }
+
+        .panel-body h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.3;
+            margin-bottom: 12px;
+        }
+
+        .panel-body p {
+            font-size: 13px;
+            color: rgba(255,255,255,0.45);
+            line-height: 1.7;
+        }
+
+        .panel-chips {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            padding: 10px 14px;
+        }
+
+        .chip-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            background: rgba(126,184,247,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .chip-icon svg {
+            width: 14px;
+            height: 14px;
+            stroke: #7eb8f7;
+        }
+
+        .chip-text {
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+            font-weight: 500;
+        }
+
+        /* Panel derecho — formulario */
+        .login-form-panel {
+            flex: 1;
+            background: #fff;
+            padding: 48px 44px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-heading {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 6px;
+        }
+
+        .form-subheading {
+            font-size: 13px;
+            color: #8892a4;
+            margin-bottom: 32px;
+        }
+
+        /* Flash de error dentro del login */
+        .flash-error {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #fcebeb;
+            color: #a32d2d;
+            border-left: 3px solid #a32d2d;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 6px;
+            letter-spacing: .3px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 13px;
+            border: 1px solid #d0d7e3;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: inherit;
+            color: #1a1a2e;
+            background: #fff;
+            transition: border-color 0.15s, box-shadow 0.15s;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: #185fa5;
+            box-shadow: 0 0 0 3px rgba(24,95,165,0.1);
+        }
+
+        .form-control:hover {
+            border-color: #a0aec0;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 11px;
+            background: #0f2944;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 0.15s;
+            letter-spacing: .3px;
+        }
+
+        .btn-login:hover {
+            background: #1a3d5e;
+        }
+
+        .btn-login:active {
+            transform: scale(0.99);
+        }
+
+        .form-footer {
+            margin-top: 28px;
+            font-size: 11px;
+            color: #a0aec0;
+            text-align: center;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-wrapper">
+
+    <!-- Panel izquierdo -->
+    <div class="login-panel">
+        <div class="panel-brand">
+            <span class="pulse-dot"></span>
+            AlzMonitor
+        </div>
+
+        <div class="panel-body">
+            <h1>Monitoreo activo de pacientes</h1>
+            <p>Sistema de seguridad para pacientes con Alzheimer y deterioro cognitivo.</p>
+        </div>
+
+        <div class="panel-chips">
+            <div class="chip">
+                <div class="chip-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+                    </svg>
+                </div>
+                <span class="chip-text">Localización GPS + Beacons BLE</span>
+            </div>
+            <div class="chip">
+                <div class="chip-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                    </svg>
+                </div>
+                <span class="chip-text">Alertas en tiempo real</span>
+            </div>
+            <div class="chip">
+                <div class="chip-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                    </svg>
+                </div>
+                <span class="chip-text">Gestión de pacientes y cuidadores</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel derecho — formulario -->
+    <div class="login-form-panel">
+        <div class="form-heading">Iniciar sesión</div>
+        <div class="form-subheading">Acceso restringido al personal autorizado</div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-error">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('login') }}">
+            <div class="form-group">
+                <label class="form-label" for="usuario">Usuario</label>
+                <input
+                    type="text"
+                    id="usuario"
+                    name="usuario"
+                    class="form-control"
+                    placeholder="Ingresa tu usuario"
+                    autocomplete="username"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="password">Contraseña</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    class="form-control"
+                    placeholder="Ingresa tu contraseña"
+                    autocomplete="current-password"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="btn-login">Entrar al sistema</button>
+        </form>
+
+        <div class="form-footer">
+            Sistema de Monitoreo Alzheimer &mdash; Bases de Datos Avanzadas<br>
+            Google Cloud Platform · PostgreSQL · Flask
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

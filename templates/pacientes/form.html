@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Editar' if paciente else 'Nuevo' }} paciente{% endblock %}
+{% block page_title %}{{ 'Editar' if paciente else 'Nuevo' }} paciente{% endblock %}
+{% block breadcrumb %}
+    Inicio /
+    <a href="{{ url_for('pacientes_lista') }}" style="color:#185fa5;">Pacientes</a> /
+    {{ 'Editar' if paciente else 'Nuevo' }}
+{% endblock %}
+
+{% block content %}
+
+<div style="max-width: 680px;">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">
+                {% if paciente %}
+                    Editando: {{ paciente.nombre_paciente }} {{ paciente.apellido_p_pac }}
+                {% else %}
+                    Registrar nuevo paciente
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card-body">
+            <form method="POST"
+                  action="{{ url_for('pacientes_editar', id=paciente.id_paciente) if paciente else url_for('pacientes_nuevo') }}">
+
+                <!-- ID del paciente (solo en creación) -->
+                {% if not paciente %}
+                <div class="form-group">
+                    <label class="form-label" for="id_paciente">ID del paciente</label>
+                    <input type="number"
+                           id="id_paciente"
+                           name="id_paciente"
+                           class="form-control"
+                           placeholder="Ej. 4"
+                           required>
+                </div>
+                {% endif %}
+
+                <!-- Nombre y apellidos -->
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="nombre_paciente">Nombre(s)</label>
+                        <input type="text"
+                               id="nombre_paciente"
+                               name="nombre_paciente"
+                               class="form-control"
+                               placeholder="Ej. María"
+                               value="{{ paciente.nombre_paciente if paciente else '' }}"
+                               required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="apellido_p_pac">Apellido paterno</label>
+                        <input type="text"
+                               id="apellido_p_pac"
+                               name="apellido_p_pac"
+                               class="form-control"
+                               placeholder="Ej. García"
+                               value="{{ paciente.apellido_p_pac if paciente else '' }}"
+                               required>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="apellido_m_pac">Apellido materno</label>
+                        <input type="text"
+                               id="apellido_m_pac"
+                               name="apellido_m_pac"
+                               class="form-control"
+                               placeholder="Ej. López"
+                               value="{{ paciente.apellido_m_pac if paciente else '' }}"
+                               required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="fecha_nacimiento">Fecha de nacimiento</label>
+                        <input type="date"
+                               id="fecha_nacimiento"
+                               name="fecha_nacimiento"
+                               class="form-control"
+                               value="{{ paciente.fecha_nacimiento.strftime('%Y-%m-%d') if paciente else '' }}"
+                               required>
+                    </div>
+                </div>
+
+                <!-- Estado -->
+                <div class="form-group">
+                    <label class="form-label" for="id_estado">Estado clínico</label>
+                    <select id="id_estado" name="id_estado" class="form-control" required>
+                        <option value="" disabled {% if not paciente %}selected{% endif %}>
+                            Selecciona un estado...
+                        </option>
+                        {% for estado in estados %}
+                            <option value="{{ estado.id_estado }}"
+                                {% if paciente and paciente.id_estado == estado.id_estado %}selected{% endif %}>
+                                {{ estado.desc_estado }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Acciones -->
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        {{ 'Guardar cambios' if paciente else 'Registrar paciente' }}
+                    </button>
+                    <a href="{{ url_for('pacientes_lista') }}" class="btn btn-secondary">
+                        Cancelar
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

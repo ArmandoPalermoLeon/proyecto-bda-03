@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Pacientes{% endblock %}
+{% block page_title %}Pacientes{% endblock %}
+{% block breadcrumb %}Inicio / Pacientes{% endblock %}
+
+{% block content %}
+
+<div class="section-header">
+    <div>
+        <div class="section-title">Lista de pacientes</div>
+        <div class="section-sub">{{ pacientes | length }} paciente(s) registrado(s)</div>
+    </div>
+    <a href="{{ url_for('pacientes_nuevo') }}" class="btn btn-primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Nuevo paciente
+    </a>
+</div>
+
+<div class="card">
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre completo</th>
+                    <th>Fecha de nacimiento</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if pacientes %}
+                    {% for p in pacientes %}
+                    <tr>
+                        <td style="color:#8892a4; font-weight:600;">{{ p.id_paciente }}</td>
+                        <td style="font-weight:500;">
+                            {{ p.nombre_paciente }} {{ p.apellido_p_pac }} {{ p.apellido_m_pac }}
+                        </td>
+                        <td>{{ p.fecha_nacimiento.strftime('%d/%m/%Y') }}</td>
+                        <td>
+                            {% if p.desc_estado == 'Activo' %}
+                                <span class="badge badge-active">Activo</span>
+                            {% else %}
+                                <span class="badge badge-hospital">{{ p.desc_estado }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="td-actions">
+                                <a href="{{ url_for('pacientes_editar', id=p.id_paciente) }}"
+                                   class="btn btn-secondary btn-sm">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                    </svg>
+                                    Editar
+                                </a>
+                                <form method="POST"
+                                      action="{{ url_for('pacientes_eliminar', id=p.id_paciente) }}"
+                                      class="form-delete"
+                                      data-nombre="{{ p.nombre_paciente }} {{ p.apellido_p_pac }}">
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="3 6 5 6 21 6"/>
+                                            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                                            <path d="M10 11v6M14 11v6"/>
+                                        </svg>
+                                        Eliminar
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5" style="text-align:center; color:#8892a4; padding:36px;">
+                            No hay pacientes registrados.
+                            <a href="{{ url_for('pacientes_nuevo') }}" style="color:#185fa5; font-weight:600;">
+                                Registrar el primero
+                            </a>
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
