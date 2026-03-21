@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AlzMonitor{% endblock %} — Sistema de Monitoreo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+<aside class="sidebar">
+
+    <div class="sidebar-logo">
+        <div class="brand">
+            <span class="pulse-dot"></span>AlzMonitor
+        </div>
+        <div class="tagline">Sistema de monitoreo activo</div>
+    </div>
+
+    <nav class="sidebar-nav">
+
+        <div class="nav-section">
+            <span class="nav-label">Principal</span>
+            <a href="{{ url_for('dashboard') }}"
+               class="nav-item {% if request.endpoint == 'dashboard' %}active{% endif %}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"/>
+                    <rect x="14" y="3" width="7" height="7"/>
+                    <rect x="3" y="14" width="7" height="7"/>
+                    <rect x="14" y="14" width="7" height="7"/>
+                </svg>
+                Dashboard
+            </a>
+        </div>
+
+        <div class="nav-section">
+            <span class="nav-label">Gestión clínica</span>
+            <a href="{{ url_for('pacientes_lista') }}"
+               class="nav-item {% if 'pacientes' in request.endpoint %}active{% endif %}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                Pacientes
+            </a>
+            <a href="{{ url_for('cuidadores_lista') }}"
+               class="nav-item {% if 'cuidadores' in request.endpoint %}active{% endif %}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Cuidadores
+            </a>
+        </div>
+
+        <div class="nav-section">
+            <span class="nav-label">Monitoreo</span>
+            <a href="#" class="nav-item disabled">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                </svg>
+                Alertas
+                <span class="nav-badge">Pronto</span>
+            </a>
+        </div>
+
+        <div class="nav-section">
+            <span class="nav-label">Equipamiento</span>
+            <a href="#" class="nav-item disabled">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="5" y="2" width="14" height="20" rx="2"/>
+                    <line x1="12" y1="18" x2="12.01" y2="18"/>
+                </svg>
+                Dispositivos
+                <span class="nav-badge">Pronto</span>
+            </a>
+            <a href="#" class="nav-item disabled">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+                </svg>
+                Zonas seguras
+                <span class="nav-badge">Pronto</span>
+            </a>
+        </div>
+
+    </nav>
+
+    <div class="sidebar-footer">
+        <div class="user-chip">
+            <div class="avatar">AD</div>
+            <div class="user-info">
+                <div class="user-name">Administrador</div>
+                <div class="user-role">Acceso total</div>
+            </div>
+            <a href="{{ url_for('logout') }}" class="logout-btn" title="Cerrar sesión">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+            </a>
+        </div>
+    </div>
+
+</aside>
+
+<div class="main-wrapper">
+
+    <header class="topbar">
+        <div class="topbar-left">
+            <div class="page-title">{% block page_title %}Panel{% endblock %}</div>
+            <div class="breadcrumb">{% block breadcrumb %}Inicio{% endblock %}</div>
+        </div>
+        <div class="topbar-right">
+            <div class="topbar-date">
+                {{ now.strftime('%A %d %b, %Y') if now else '' }}
+            </div>
+        </div>
+    </header>
+
+    <!-- Mensajes flash -->
+    <div class="flash-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">
+                        {% if category == 'success' %}
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg>
+                        {% else %}
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        {% endif %}
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Bloque de contenido de cada página -->
+    <main class="content">
+        {% block content %}{% endblock %}
+    </main>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

@@ -1,13 +1,11 @@
-import os 
 from flask import Flask, render_template, request, redirect, url_for, flash
-import db
+
 
 app=Flask(__name__)
 app.secret_key="clave"
-@app.route("/")
+@app.route("/", method=["POST"])
 def index():
-    pass
+    return render_template('base.html')
 
 if __name__=="__main__":
-    app.run(debug=True)
-
+        app.run(debug=True)
