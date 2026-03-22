@@ -15,8 +15,8 @@ document.addEventListener('DOMContentLoaded', function () {
   deleteForms.forEach(function (form) {
     form.addEventListener('submit', function (e) {
       const nombre = form.dataset.nombre || 'este registro';
-      if (!confirm('¿Confirmas que deseas eliminar a ' + nombre + '? Esta acción no se puede deshacer.')) {
-        e.preventDefault();
+      if (!confirm('¿Confirmas que deseas dar de baja a ' + nombre + '? El registro permanecerá en el sistema como inactivo.')) {
+      e.preventDefault();
       }
     });
   });

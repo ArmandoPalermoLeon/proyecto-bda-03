@@ -78,6 +78,7 @@ def pacientes_lista():
                ep.desc_estado
         FROM pacientes p
         JOIN estados_paciente ep ON ep.id_estado = p.id_estado
+        WHERE ep.desc_estado != 'Inactivo'
         ORDER BY p.id_paciente
     """)
     return render_template("pacientes/list.html", pacientes=pacientes)
@@ -136,8 +137,8 @@ def pacientes_editar(id):
 @app.route("/pacientes/eliminar/<int:id>", methods=["POST"])
 @login_requerido
 def pacientes_eliminar(id):
-    db.execute("DELETE FROM pacientes WHERE id_paciente = %s", (id,))
-    flash("Paciente eliminado.", "success")
+    db.execute("UPDATE pacientes SET id_estado = 3 WHERE id_paciente = %s", (id,))
+    flash("Paciente dado de baja correctamente.", "success")
     return redirect(url_for("pacientes_lista"))
 
 
@@ -151,6 +152,7 @@ def cuidadores_lista():
                apellido_m_cuid,
                telefono_cuid
         FROM cuidadores
+        WHERE estado = TRUE               
         ORDER BY id_cuidador
     """)
     return render_template("cuidadores/list.html", cuidadores=cuidadores)
@@ -203,8 +205,8 @@ def cuidadores_editar(id):
 @app.route("/cuidadores/eliminar/<int:id>", methods=["POST"])
 @login_requerido
 def cuidadores_eliminar(id):
-    db.execute("DELETE FROM cuidadores WHERE id_cuidador = %s", (id,))
-    flash("Cuidador eliminado.", "success")
+    db.execute("UPDATE cuidadores SET estado = FALSE WHERE id_cuidador = %s", (id,))
+    flash("Cuidador marcado como inactivo.", "success")
     return redirect(url_for("cuidadores_lista"))
 
 
