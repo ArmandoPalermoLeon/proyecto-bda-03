@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}Historial — {{ paciente.nombre_paciente }} {{ paciente.apellido_p_pac }}{% endblock %}
+{% block page_title %}Historial clínico{% endblock %}
+{% block breadcrumb %}
+    Inicio /
+    <a href="{{ url_for('pacientes_lista') }}" style="color:#185fa5;">Pacientes</a> /
+    Historial
+{% endblock %}
+
+{% block content %}
+
+<div style="max-width:780px;">
+
+    <!-- Tarjeta de identidad del paciente -->
+    <div class="card" style="margin-bottom:20px;">
+        <div class="card-body" style="padding:20px;">
+            <div style="display:flex; align-items:center; gap:18px;">
+
+                <div style="width:56px; height:56px; border-radius:50%; background:#e6f1fb;
+                            display:flex; align-items:center; justify-content:center;
+                            font-size:18px; font-weight:700; color:#185fa5; flex-shrink:0;">
+                    {{ paciente.nombre_paciente[0] }}{{ paciente.apellido_p_pac[0] }}
+                </div>
+
+                <div style="flex:1;">
+                    <div style="font-size:18px; font-weight:700; color:#1a1a2e;">
+                        {{ paciente.nombre_paciente }} {{ paciente.apellido_p_pac }} {{ paciente.apellido_m_pac }}
+                    </div>
+                    <div style="font-size:13px; color:#8892a4; margin-top:3px;">
+                        ID: {{ paciente.id_paciente }} &nbsp;·&nbsp;
+                        Nacimiento: {{ paciente.fecha_nacimiento.strftime('%d/%m/%Y') }}
+                    </div>
+                </div>
+
+                {% if estado.desc_estado == 'Activo' %}
+                    <span class="badge badge-active" style="font-size:12px; padding:5px 12px;">
+                        {{ estado.desc_estado }}
+                    </span>
+                {% else %}
+                    <span class="badge badge-hospital" style="font-size:12px; padding:5px 12px;">
+                        {{ estado.desc_estado }}
+                    </span>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Enfermedades -->
+    <div class="section-header" style="margin-bottom:12px;">
+        <div>
+            <div class="section-title">Enfermedades diagnosticadas</div>
+            <div class="section-sub">{{ enfermedades | length }} diagnóstico(s) registrado(s)</div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-bottom:20px;">
+        {% if enfermedades %}
+            {% for e in enfermedades %}
+            <div style="display:flex; align-items:center; justify-content:space-between;
+                        padding:14px 20px;
+                        border-bottom:{% if not loop.last %}1px solid #f0f2f5{% else %}none{% endif %};">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <div style="width:36px; height:36px; border-radius:8px; background:#e6f1fb;
+                                display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#185fa5" stroke-width="2"
+                             style="width:16px; height:16px;">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div style="font-size:14px; font-weight:600; color:#1a1a2e;">
+                            {{ e.nombre_enfermedad }}
+                        </div>
+                        <div style="font-size:12px; color:#8892a4; margin-top:1px;">
+                            Diagnóstico registrado
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-size:13px; font-weight:600; color:#2d3748;">
+                        {{ e.fecha_diag.strftime('%d/%m/%Y') }}
+                    </div>
+                    <div style="font-size:11px; color:#8892a4; margin-top:1px;">Fecha de diagnóstico</div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div style="text-align:center; color:#8892a4; padding:32px; font-size:13px;">
+                No hay enfermedades registradas para este paciente.
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Cuidadores -->
+    <div class="section-header" style="margin-bottom:12px;">
+        <div>
+            <div class="section-title">Cuidadores asignados</div>
+            <div class="section-sub">{{ cuidadores | length }} cuidador(es) vinculado(s)</div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-bottom:24px;">
+        {% if cuidadores %}
+            {% for c in cuidadores %}
+            <div style="display:flex; align-items:center; justify-content:space-between;
+                        padding:14px 20px;
+                        border-bottom:{% if not loop.last %}1px solid #f0f2f5{% else %}none{% endif %};">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <div style="width:36px; height:36px; border-radius:50%; background:#eaf3de;
+                                display:flex; align-items:center; justify-content:center;
+                                font-size:12px; font-weight:700; color:#27500a; flex-shrink:0;">
+                        {{ c.nombre_cuidador[0] }}{{ c.apellido_p_cuid[0] }}
+                    </div>
+                    <div>
+                        <div style="font-size:14px; font-weight:600; color:#1a1a2e;">
+                            {{ c.nombre_cuidador }} {{ c.apellido_p_cuid }} {{ c.apellido_m_cuid }}
+                        </div>
+                        <div style="font-size:12px; color:#8892a4; margin-top:1px;">
+                            {{ c.telefono_cuid }}
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-size:13px; font-weight:600; color:#2d3748;">
+                        {{ c.fecha_asig_cuidador.strftime('%d/%m/%Y') }}
+                    </div>
+                    <div style="font-size:11px; color:#8892a4; margin-top:1px;">Fecha de asignación</div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div style="text-align:center; color:#8892a4; padding:32px; font-size:13px;">
+                No hay cuidadores asignados a este paciente.
+            </div>
+        {% endif %}
+    </div>
+
+    <a href="{{ url_for('pacientes_lista') }}" class="btn btn-secondary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="19" y1="12" x2="5" y2="12"/>
+            <polyline points="12 19 5 12 12 5"/>
+        </svg>
+        Volver a pacientes
+    </a>
+
+</div>
+
+{% endblock %}
