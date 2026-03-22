@@ -30,51 +30,211 @@
     </div>
 </div>
 
-<!-- Alertas recientes -->
+<!-- Alertas + Gráfica -->
+<div style="display:grid; grid-template-columns: 1fr 1fr; gap:18px; margin-bottom:20px;">
+
+    <!-- Alertas recientes -->
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Alertas recientes</div>
+                <div style="font-size:11px; color:#8892a4; margin-top:2px;">Últimos 5 eventos del sistema</div>
+            </div>
+        </div>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Paciente</th>
+                        <th>Tipo</th>
+                        <th>Estatus</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if alertas %}
+                        {% for a in alertas %}
+                        <tr>
+                            <td style="font-weight:500;">{{ a.paciente }}</td>
+                            <td>{{ a.tipo_alerta }}</td>
+                            <td>
+                                {% if a.estatus_alerta == 'Activa' %}
+                                    <span class="badge badge-alert">Activa</span>
+                                {% else %}
+                                    <span class="badge badge-atendida">Atendida</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="3" style="text-align:center; color:#8892a4; padding:28px;">
+                                No hay alertas registradas.
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Gráfica de alertas por tipo -->
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Alertas por tipo</div>
+                <div style="font-size:11px; color:#8892a4; margin-top:2px;">Distribución del periodo actual</div>
+            </div>
+        </div>
+        <div style="padding:16px 18px 18px;">
+            <div id="chart-bars" style="display:flex; align-items:flex-end; gap:12px; height:130px; padding-bottom:8px; border-bottom:1px solid #f0f2f5; margin-bottom:12px;">
+                <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%; justify-content:flex-end;">
+                    <span id="val-salida" style="font-size:13px; font-weight:700; color:#1a1a2e;">—</span>
+                    <div id="bar-salida" style="width:100%; background:#185fa5; border-radius:5px 5px 0 0; height:0%; min-height:4px; transition:height .5s ease;"></div>
+                    <span style="font-size:10px; color:#8892a4; font-weight:500; text-align:center;">Salida zona</span>
+                </div>
+                <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%; justify-content:flex-end;">
+                    <span id="val-bateria" style="font-size:13px; font-weight:700; color:#1a1a2e;">—</span>
+                    <div id="bar-bateria" style="width:100%; background:#ba7517; border-radius:5px 5px 0 0; height:0%; min-height:4px; transition:height .5s ease;"></div>
+                    <span style="font-size:10px; color:#8892a4; font-weight:500; text-align:center;">Batería baja</span>
+                </div>
+                <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%; justify-content:flex-end;">
+                    <span id="val-sos" style="font-size:13px; font-weight:700; color:#1a1a2e;">—</span>
+                    <div id="bar-sos" style="width:100%; background:#e24b4a; border-radius:5px 5px 0 0; height:0%; min-height:4px; transition:height .5s ease;"></div>
+                    <span style="font-size:10px; color:#8892a4; font-weight:500; text-align:center;">Botón SOS</span>
+                </div>
+            </div>
+            <div style="display:flex; gap:14px; flex-wrap:wrap;">
+                <div style="display:flex; align-items:center; gap:5px; font-size:11px; color:#8892a4;">
+                    <div style="width:8px; height:8px; border-radius:2px; background:#185fa5;"></div>Salida de zona
+                </div>
+                <div style="display:flex; align-items:center; gap:5px; font-size:11px; color:#8892a4;">
+                    <div style="width:8px; height:8px; border-radius:2px; background:#ba7517;"></div>Batería baja
+                </div>
+                <div style="display:flex; align-items:center; gap:5px; font-size:11px; color:#8892a4;">
+                    <div style="width:8px; height:8px; border-radius:2px; background:#e24b4a;"></div>Botón SOS
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Mapa de zonas seguras -->
 <div class="section-header">
     <div>
-        <div class="section-title">Alertas recientes</div>
-        <div class="section-sub">Últimos 5 eventos registrados por el sistema</div>
+        <div class="section-title">Mapa de zonas seguras</div>
+        <div class="section-sub">Visualización geográfica de los geofences activos — Integración GPS en Fase 5</div>
+    </div>
+    <span style="font-size:11px; background:#eaf3de; color:#27500a; font-weight:700; padding:4px 10px; border-radius:5px;">
+        3 zonas activas
+    </span>
+</div>
+
+<div class="card" style="margin-bottom:20px;">
+    <!-- Cabecera del mapa con zonas -->
+    <div style="display:flex; gap:0; border-bottom:1px solid #f0f2f5;">
+        <div style="padding:12px 18px; border-right:1px solid #f0f2f5; flex:1;">
+            <div style="font-size:10px; font-weight:700; color:#8892a4; letter-spacing:.8px; text-transform:uppercase; margin-bottom:6px;">Zonas registradas</div>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="width:8px; height:8px; border-radius:50%; background:#185fa5; flex-shrink:0;"></div>
+                    <span style="font-size:12px; font-weight:500; color:#1a1a2e;">Jardín Norte</span>
+                    <span style="font-size:11px; color:#8892a4; margin-left:auto;">Radio: 50m</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="width:8px; height:8px; border-radius:50%; background:#27500a; flex-shrink:0;"></div>
+                    <span style="font-size:12px; font-weight:500; color:#1a1a2e;">Ala Oriente</span>
+                    <span style="font-size:11px; color:#8892a4; margin-left:auto;">Radio: 40m</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="width:8px; height:8px; border-radius:50%; background:#ba7517; flex-shrink:0;"></div>
+                    <span style="font-size:12px; font-weight:500; color:#1a1a2e;">Patio Sur</span>
+                    <span style="font-size:11px; color:#8892a4; margin-left:auto;">Radio: 60m</span>
+                </div>
+            </div>
+        </div>
+        <div style="padding:12px 18px; flex:1;">
+            <div style="font-size:10px; font-weight:700; color:#8892a4; letter-spacing:.8px; text-transform:uppercase; margin-bottom:6px;">Tecnología de localización</div>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span class="badge badge-gps">GPS</span>
+                    <span style="font-size:12px; color:#4a5568;">Rastreo exterior — TK103 / GT06</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span class="badge badge-beacon">BEACON</span>
+                    <span style="font-size:12px; color:#4a5568;">Localización interior — BC001 / BC002</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span class="badge" style="background:#f0f2f5; color:#595959;">GCP</span>
+                    <span style="font-size:12px; color:#4a5568;">Google Cloud Platform — VM activa</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Placeholder del mapa -->
+    <div style="height:300px; background:#e8f0f7; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; position:relative; overflow:hidden;">
+
+        <!-- Grid decorativo de fondo -->
+        <svg style="position:absolute; inset:0; width:100%; height:100%; opacity:.15;" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#185fa5" stroke-width="0.5"/>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid)"/>
+        </svg>
+
+        <!-- Círculos de zona decorativos -->
+        <svg style="position:absolute; inset:0; width:100%; height:100%; opacity:.25;" viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="250" cy="150" r="70" fill="none" stroke="#185fa5" stroke-width="1.5" stroke-dasharray="6 4"/>
+            <circle cx="250" cy="150" r="8" fill="#185fa5" opacity=".6"/>
+            <circle cx="480" cy="120" r="55" fill="none" stroke="#27500a" stroke-width="1.5" stroke-dasharray="6 4"/>
+            <circle cx="480" cy="120" r="8" fill="#27500a" opacity=".6"/>
+            <circle cx="600" cy="180" r="80" fill="none" stroke="#ba7517" stroke-width="1.5" stroke-dasharray="6 4"/>
+            <circle cx="600" cy="180" r="8" fill="#ba7517" opacity=".6"/>
+        </svg>
+
+        <!-- Texto central -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="#185fa5" stroke-width="1.5" style="width:40px; height:40px; opacity:.5; position:relative; z-index:1;">
+            <circle cx="12" cy="12" r="10"/>
+            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+        </svg>
+        <div style="position:relative; z-index:1; text-align:center;">
+            <div style="font-size:14px; font-weight:600; color:#4a5568;">Mapa interactivo de zonas seguras</div>
+            <div style="font-size:12px; color:#8892a4; margin-top:4px;">Visualización de trayectorias GPS en tiempo real — Fase 5</div>
+        </div>
+
     </div>
 </div>
 
-<div class="card">
-    <div class="table-wrapper">
-        <table>
-            <thead>
-                <tr>
-                    <th>Paciente</th>
-                    <th>Tipo de alerta</th>
-                    <th>Fecha y hora</th>
-                    <th>Estatus</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if alertas %}
-                    {% for a in alertas %}
-                    <tr>
-                        <td>{{ a.paciente }}</td>
-                        <td>{{ a.tipo_alerta }}</td>
-                        <td>{{ a.fecha_hora_lectura.strftime('%d %b %Y  %H:%M') }}</td>
-                        <td>
-                            {% if a.estatus_alerta == 'Activa' %}
-                                <span class="badge badge-alert">Activa</span>
-                            {% else %}
-                                <span class="badge badge-atendida">Atendida</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                {% else %}
-                    <tr>
-                        <td colspan="4" style="text-align:center; color:#8892a4; padding:28px;">
-                            No hay alertas registradas.
-                        </td>
-                    </tr>
-                {% endif %}
-            </tbody>
-        </table>
-    </div>
-</div>
+{% endblock %}
 
+{% block extra_js %}
+<script>
+    fetch('/api/estadisticas')
+        .then(r => r.json())
+        .then(data => {
+            const tipos = data.alertas_por_tipo || [];
+            let maxVal = 1;
+            tipos.forEach(t => { if (t.total > maxVal) maxVal = t.total; });
+
+            tipos.forEach(t => {
+                const pct = Math.round((t.total / maxVal) * 100);
+                if (t.tipo_alerta === 'Salida de Zona') {
+                    document.getElementById('bar-salida').style.height = pct + '%';
+                    document.getElementById('val-salida').textContent  = t.total;
+                }
+                if (t.tipo_alerta === 'Batería Baja') {
+                    document.getElementById('bar-bateria').style.height = pct + '%';
+                    document.getElementById('val-bateria').textContent  = t.total;
+                }
+                if (t.tipo_alerta === 'Botón SOS') {
+                    document.getElementById('bar-sos').style.height = pct + '%';
+                    document.getElementById('val-sos').textContent  = t.total;
+                }
+            });
+        })
+        .catch(() => {});
+</script>
 {% endblock %}
