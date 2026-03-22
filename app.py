@@ -209,7 +209,31 @@ def cuidadores_eliminar(id):
     flash("Cuidador marcado como inactivo.", "success")
     return redirect(url_for("cuidadores_lista"))
 
-
+@app.route("/pacientes/historial/<int:id>")
+@login_requerido
+def pacientes_historial(id):
+    paciente = db.query("SELECT * FROM pacientes WHERE id_paciente = %s", (id,), fetch="one")
+    estado = db.query("SELECT desc_estado FROM estados_paciente WHERE id_estado = %s", (paciente["id_estado"],), fetch="one")
+    enfermedades = db.query("""
+        SELECT e.nombre_enfermedad, te.fecha_diag
+        FROM tiene_enfermedad te
+        JOIN enfermedades e ON e.id_enfermedad = te.id_enfermedad
+        WHERE te.id_paciente = %s
+        ORDER BY te.fecha_diag
+    """, (id,))
+    cuidadores = db.query("""
+        SELECT c.nombre_cuidador, c.apellido_p_cuid, c.apellido_m_cuid,
+               c.telefono_cuid, ac.fecha_asig_cuidador
+        FROM asignacion_cuidadores ac
+        JOIN cuidadores c ON c.id_cuidador = ac.id_cuidador
+        WHERE ac.id_paciente = %s
+        ORDER BY ac.fecha_asig_cuidador
+    """, (id,))
+    return render_template("pacientes/historial.html",
+                           paciente=paciente,
+                           estado=estado,
+                           enfermedades=enfermedades,
+                           cuidadores=cuidadores)
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5001)
