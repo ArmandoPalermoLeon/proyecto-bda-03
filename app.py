@@ -152,7 +152,6 @@ def cuidadores_lista():
                apellido_m_cuid,
                telefono_cuid
         FROM cuidadores
-        WHERE estado = TRUE               
         ORDER BY id_cuidador
     """)
     return render_template("cuidadores/list.html", cuidadores=cuidadores)
